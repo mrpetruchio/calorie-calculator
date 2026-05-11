@@ -30,73 +30,117 @@
 
   <div class="container hero-content">
     <div class="badge">Аккаунт</div>
-    <h1>Вход в NutriWorld</h1>
-    <p>Создайте аккаунт, чтобы сохранять дневник питания в облаке.</p>
+    <h1>Личный кабинет</h1>
+    <p>Войдите в аккаунт или зарегистрируйтесь, чтобы сохранять дневник питания в облаке.</p>
   </div>
 </header>
 
 <main class="container">
 
-  <section class="card">
+  <section id="authAccount" class="card hidden">
     <div class="section-title">
-      <h2>Войти или зарегистрироваться</h2>
-      <p>Введите имя пользователя, email и пароль. Если аккаунт уже есть — нажмите «Войти».</p>
+      <h2>Вы вошли в аккаунт</h2>
+      <p>Ваш дневник питания сохраняется в облаке.</p>
     </div>
 
-    <form id="authForm" class="form">
-      <label>
-        Имя пользователя
-        <input
-          type="text"
-          id="authName"
-        />
-      </label>
+    <div id="authStatus" class="result"></div>
 
-      <label>
-        Email
-        <input
-          type="email"
-          id="authEmail"
-          placeholder="you@example.com"
-          required
-        />
-      </label>
-
-      <label>
-        Пароль
-        <input
-          type="password"
-          id="authPassword"
-          placeholder="Минимум 6 символов"
-          required
-        />
-      </label>
-
-      <label class="checkbox-label">
-        <input
-          type="checkbox"
-          id="privacyConsent"
-        />
-        <span>
-          Я согласен с
-          <a href="privacy.html" target="_blank">Политикой конфиденциальности</a>
-          и обработкой персональных данных
-        </span>
-      </label>
-
-      <button type="button" id="loginBtn">Войти</button>
-
-      <button type="button" id="signupBtn" class="secondary-button">
-        Зарегистрироваться
-      </button>
-    </form>
-
-    <div id="authStatus" class="result hidden"></div>
-
-    <button id="logoutBtn" class="danger-button hidden">
+    <button id="logoutBtn" class="danger-button">
       Выйти
     </button>
   </section>
+
+  <section id="authGuest" class="auth-grid">
+
+    <div class="card">
+      <div class="section-title">
+        <h2>Войти</h2>
+        <p>Для входа нужны только email и пароль.</p>
+      </div>
+
+      <form id="loginForm" class="form auth-form-single">
+        <label>
+          Email
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="you@example.com"
+            required
+          />
+        </label>
+
+        <label>
+          Пароль
+          <input
+            type="password"
+            id="loginPassword"
+            placeholder="Минимум 6 символов"
+            required
+          />
+        </label>
+
+        <button type="button" id="loginBtn">
+          Войти
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="section-title">
+        <h2>Зарегистрироваться</h2>
+        <p>Имя пользователя нужно только при создании аккаунта.</p>
+      </div>
+
+      <form id="signupForm" class="form auth-form-single">
+        <label>
+          Имя пользователя
+          <input
+            type="text"
+            id="authName"
+          />
+        </label>
+
+        <label>
+          Email
+          <input
+            type="email"
+            id="authEmail"
+            placeholder="you@example.com"
+            required
+          />
+        </label>
+
+        <label>
+          Пароль
+          <input
+            type="password"
+            id="authPassword"
+            placeholder="Минимум 6 символов"
+            required
+          />
+        </label>
+
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            id="privacyConsent"
+          />
+          <span>
+            Я согласен с
+            <a href="privacy.html" target="_blank">Политикой конфиденциальности</a>
+            и обработкой персональных данных
+          </span>
+        </label>
+
+        <button type="button" id="signupBtn" class="secondary-button">
+          Зарегистрироваться
+        </button>
+      </form>
+    </div>
+
+  </section>
+
+  <div id="authMessage" class="container-message hidden"></div>
 
 </main>
 

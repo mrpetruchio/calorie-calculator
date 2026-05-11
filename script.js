@@ -576,50 +576,83 @@ initLanguageSelect();
 renderCuisineFilter();
 renderPopularFoods();
 const authName = document.getElementById("authName");
+
 const authEmail = document.getElementById("authEmail");
 const authPassword = document.getElementById("authPassword");
+
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
 
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const authStatus = document.getElementById("authStatus");
+const authMessage = document.getElementById("authMessage");
 const privacyConsent = document.getElementById("privacyConsent");
 
-async function checkUser() {
-  if (!authStatus || !logoutBtn) return;
+const authGuest = document.getElementById("authGuest");
+const authAccount = document.getElementById("authAccount");
 
+function showAuthMessage(message) {
+  const target = authMessage || authStatus;
+
+  if (!target) {
+    alert(message);
+    return;
+  }
+
+  target.classList.remove("hidden");
+  target.innerHTML = message;
+}
+
+async function checkUser() {
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
 
   if (user) {
-    authStatus.classList.remove("hidden");
-    logoutBtn.classList.remove("hidden");
+    if (authGuest) authGuest.classList.add("hidden");
+    if (authAccount) authAccount.classList.remove("hidden");
 
-    authStatus.innerHTML = `
-      <strong>Вы вошли:</strong><br>
-      ${user.email}
-    `;
+    if (authStatus) {
+      const name = user.user_metadata?.name;
+
+      authStatus.classList.remove("hidden");
+      authStatus.innerHTML = `
+        <strong>Вы вошли:</strong><br>
+        ${name ? name + "<br>" : ""}
+        ${user.email}
+      `;
+    }
+
+    if (logoutBtn) logoutBtn.classList.remove("hidden");
+    return;
   }
+
+  if (authGuest) authGuest.classList.remove("hidden");
+  if (authAccount) authAccount.classList.add("hidden");
 }
 
 if (signupBtn) {
   signupBtn.addEventListener("click", async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
     if (privacyConsent && !privacyConsent.checked) {
-      authStatus.classList.remove("hidden");
-      authStatus.innerHTML = "Нужно согласиться с Политикой конфиденциальности.";
+      showAuthMessage("Нужно согласиться с Политикой конфиденциальности.");
       return;
     }
 
-    const email = authEmail.value;
-    const password = authPassword.value;
-
+    const email = authEmail ? authEmail.value.trim() : "";
+    const password = authPassword ? authPassword.value.trim() : "";
     const name = authName ? authName.value.trim() : "";
 
-    const { data, error } = await supabaseClient.auth.signUp({
+    if (!email || !password) {
+      showAuthMessage("Введите email и пароль.");
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
@@ -629,63 +662,68 @@ if (signupBtn) {
       }
     });
 
-    authStatus.classList.remove("hidden");
-
     if (error) {
-      authStatus.innerHTML = error.message;
+      showAuthMessage(error.message);
       return;
     }
 
-    authStatus.innerHTML = `
+    showAuthMessage(`
       Регистрация успешна.<br>
       Проверьте email.
-    `;
+    `);
+
+    await updateAccountLink();
+    await checkUser();
   });
 }
 
 if (loginBtn) {
   loginBtn.addEventListener("click", async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-    const email = authEmail.value;
-    const password = authPassword.value;
+    const email = (loginEmail || authEmail)?.value.trim() || "";
+    const password = (loginPassword || authPassword)?.value.trim() || "";
 
-    const { data, error } =
+    if (!email || !password) {
+      showAuthMessage("Введите email и пароль.");
+      return;
+    }
+
+    const { error } =
       await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
 
-    authStatus.classList.remove("hidden");
-
     if (error) {
-      authStatus.innerHTML = error.message;
+      showAuthMessage(error.message);
       return;
     }
 
-    authStatus.innerHTML = `
-      Вход выполнен.
-    `;
+    showAuthMessage("Вход выполнен.");
 
-    logoutBtn.classList.remove("hidden");
+    await updateAccountLink();
+    await checkUser();
   });
 }
 
 if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
+  logoutBtn.addEventListener("click", async (event) => {
+    event.preventDefault();
 
     await supabaseClient.auth.signOut();
 
-    authStatus.innerHTML = `
-      Вы вышли из аккаунта.
-    `;
+    if (authStatus) {
+      authStatus.innerHTML = "Вы вышли из аккаунта.";
+    }
 
-    logoutBtn.classList.add("hidden");
-    updateAccountLink();
+    if (logoutBtn) logoutBtn.classList.add("hidden");
+    if (authGuest) authGuest.classList.remove("hidden");
+    if (authAccount) authAccount.classList.add("hidden");
+
+    await updateAccountLink();
   });
 }
-
-checkUser();
 
 async function updateAccountLink() {
   const accountLink = document.getElementById("accountLink");
@@ -710,4 +748,6 @@ async function updateAccountLink() {
   }
 }
 
+checkUser();
 updateAccountLink();
+

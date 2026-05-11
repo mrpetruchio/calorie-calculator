@@ -604,21 +604,27 @@ button {
 }
 
 
-.checkbox-label {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-weight: 700;
-  line-height: 1.4;
+.auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
-.checkbox-label input {
-  width: auto;
-  margin-top: 4px;
+.auth-form-single {
+  grid-template-columns: 1fr;
 }
 
-.checkbox-label a {
-  color: #166534;
-  font-weight: 900;
+.container-message {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .auth-grid {
+    grid-template-columns: 1fr;
+  }
 }
