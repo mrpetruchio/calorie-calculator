@@ -23,6 +23,7 @@
       <a href="foods.html" class="nav-link">Блюда</a>
       <a href="diary.html" class="nav-link">Дневник</a>
       <a href="auth.html" id="accountLink" class="nav-link active">Вход</a>
+
       <select id="languageSelect" class="language-select"></select>
     </div>
   </nav>
@@ -30,7 +31,7 @@
   <div class="container hero-content">
     <div class="badge">Аккаунт</div>
     <h1>Вход в NutriWorld</h1>
-    <p>Создайте аккаунт, чтобы позже сохранять дневник питания в облаке.</p>
+    <p>Создайте аккаунт, чтобы сохранять дневник питания в облаке.</p>
   </div>
 </header>
 
@@ -39,22 +40,44 @@
   <section class="card">
     <div class="section-title">
       <h2>Войти или зарегистрироваться</h2>
-      <p>Введите email и пароль. Если аккаунта нет — нажмите “Зарегистрироваться”.</p>
+      <p>Введите имя, email и пароль. Если аккаунт уже есть — нажмите «Войти».</p>
     </div>
 
     <form id="authForm" class="form">
       <label>
+        Имя
+        <input
+          type="text"
+          id="authName"
+          placeholder="Например, Cong"
+        />
+      </label>
+
+      <label>
         Email
-        <input type="email" id="authEmail" placeholder="you@example.com" required />
+        <input
+          type="email"
+          id="authEmail"
+          placeholder="you@example.com"
+          required
+        />
       </label>
 
       <label>
         Пароль
-        <input type="password" id="authPassword" placeholder="Минимум 6 символов" required />
+        <input
+          type="password"
+          id="authPassword"
+          placeholder="Минимум 6 символов"
+          required
+        />
       </label>
 
       <button type="button" id="loginBtn">Войти</button>
-      <button type="button" id="signupBtn" class="secondary-button">Зарегистрироваться</button>
+
+      <button type="button" id="signupBtn" class="secondary-button">
+        Зарегистрироваться
+      </button>
     </form>
 
     <div id="authStatus" class="result hidden"></div>

@@ -575,6 +575,7 @@ if (clearDiaryBtn) {
 initLanguageSelect();
 renderCuisineFilter();
 renderPopularFoods();
+const authName = document.getElementById("authName");
 const authEmail = document.getElementById("authEmail");
 const authPassword = document.getElementById("authPassword");
 
@@ -609,9 +610,16 @@ if (signupBtn) {
     const email = authEmail.value;
     const password = authPassword.value;
 
+    const name = authName ? authName.value.trim() : "";
+
     const { data, error } = await supabaseClient.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: {
+          name: name
+        }
+      }
     });
 
     authStatus.classList.remove("hidden");
@@ -664,6 +672,9 @@ if (logoutBtn) {
     authStatus.innerHTML = `
       Вы вышли из аккаунта.
     `;
+
+    logoutBtn.classList.add("hidden");
+    updateAccountLink();
   });
 }
 
@@ -679,7 +690,12 @@ async function updateAccountLink() {
   } = await supabaseClient.auth.getUser();
 
   if (user) {
-    accountLink.textContent = user.email;
+    const name = user.user_metadata?.name;
+
+    accountLink.textContent = name
+      ? `👤 ${name}`
+      : "👤 Личный кабинет";
+
     accountLink.href = "auth.html";
   } else {
     accountLink.textContent = "Вход";
