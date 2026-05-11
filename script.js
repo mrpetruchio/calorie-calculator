@@ -575,6 +575,9 @@ if (clearDiaryBtn) {
 initLanguageSelect();
 renderCuisineFilter();
 renderPopularFoods();
+
+/* AUTH / ACCOUNT */
+
 const authName = document.getElementById("authName");
 
 const authEmail = document.getElementById("authEmail");
@@ -606,10 +609,16 @@ function showAuthMessage(message) {
   target.innerHTML = message;
 }
 
-async function checkUser() {
+async function getCurrentUser() {
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
+
+  return user;
+}
+
+async function renderAuthPage() {
+  const user = await getCurrentUser();
 
   if (user) {
     if (authGuest) authGuest.classList.add("hidden");
@@ -621,7 +630,7 @@ async function checkUser() {
       authStatus.classList.remove("hidden");
       authStatus.innerHTML = `
         <strong>Вы вошли:</strong><br>
-        ${name ? name + "<br>" : ""}
+        ${name ? `${name}<br>` : ""}
         ${user.email}
       `;
     }
@@ -632,6 +641,7 @@ async function checkUser() {
 
   if (authGuest) authGuest.classList.remove("hidden");
   if (authAccount) authAccount.classList.add("hidden");
+  if (logoutBtn) logoutBtn.classList.add("hidden");
 }
 
 if (signupBtn) {
@@ -673,7 +683,7 @@ if (signupBtn) {
     `);
 
     await updateAccountLink();
-    await checkUser();
+    await renderAuthPage();
   });
 }
 
@@ -681,19 +691,18 @@ if (loginBtn) {
   loginBtn.addEventListener("click", async (event) => {
     event.preventDefault();
 
-    const email = (loginEmail || authEmail)?.value.trim() || "";
-    const password = (loginPassword || authPassword)?.value.trim() || "";
+    const email = loginEmail ? loginEmail.value.trim() : "";
+    const password = loginPassword ? loginPassword.value.trim() : "";
 
     if (!email || !password) {
       showAuthMessage("Введите email и пароль.");
       return;
     }
 
-    const { error } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+    const { error } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
     if (error) {
       showAuthMessage(error.message);
@@ -703,7 +712,7 @@ if (loginBtn) {
     showAuthMessage("Вход выполнен.");
 
     await updateAccountLink();
-    await checkUser();
+    await renderAuthPage();
   });
 }
 
@@ -717,9 +726,9 @@ if (logoutBtn) {
       authStatus.innerHTML = "Вы вышли из аккаунта.";
     }
 
-    if (logoutBtn) logoutBtn.classList.add("hidden");
-    if (authGuest) authGuest.classList.remove("hidden");
     if (authAccount) authAccount.classList.add("hidden");
+    if (authGuest) authGuest.classList.remove("hidden");
+    if (logoutBtn) logoutBtn.classList.add("hidden");
 
     await updateAccountLink();
   });
@@ -730,9 +739,7 @@ async function updateAccountLink() {
 
   if (!accountLink) return;
 
-  const {
-    data: { user }
-  } = await supabaseClient.auth.getUser();
+  const user = await getCurrentUser();
 
   if (user) {
     const name = user.user_metadata?.name;
@@ -748,6 +755,6 @@ async function updateAccountLink() {
   }
 }
 
-checkUser();
+renderAuthPage();
 updateAccountLink();
 

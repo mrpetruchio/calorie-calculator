@@ -603,6 +603,7 @@ button {
   }
 }
 
+/* AUTH PAGE */
 
 .auth-grid {
   display: grid;
@@ -614,13 +615,23 @@ button {
   grid-template-columns: 1fr;
 }
 
-.container-message {
-  margin-top: 24px;
-  padding: 20px 24px;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 20px;
-  font-weight: 800;
+.checkbox-label {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.checkbox-label a {
+  color: #166534;
+  font-weight: 900;
 }
 
 @media (max-width: 900px) {
@@ -628,3 +639,4 @@ button {
     grid-template-columns: 1fr;
   }
 }
+

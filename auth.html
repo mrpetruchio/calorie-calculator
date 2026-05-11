@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>NutriWorld — вход</title>
+  <title>NutriWorld — Личный кабинет</title>
 
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -37,6 +37,7 @@
 
 <main class="container">
 
+  <!-- Этот блок показывается ТОЛЬКО когда пользователь уже вошёл -->
   <section id="authAccount" class="card hidden">
     <div class="section-title">
       <h2>Вы вошли в аккаунт</h2>
@@ -50,6 +51,7 @@
     </button>
   </section>
 
+  <!-- Этот блок показывается ТОЛЬКО когда пользователь НЕ вошёл -->
   <section id="authGuest" class="auth-grid">
 
     <div class="card">
@@ -140,7 +142,7 @@
 
   </section>
 
-  <div id="authMessage" class="container-message hidden"></div>
+  <div id="authMessage" class="result hidden"></div>
 
 </main>
 
