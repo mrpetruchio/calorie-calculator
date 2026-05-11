@@ -522,7 +522,8 @@ async function checkUser() {
 }
 
 if (signupBtn) {
-  signupBtn.addEventListener("click", async () => {
+  signupBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
 
     const email = authEmail.value;
     const password = authPassword.value;
@@ -547,7 +548,8 @@ if (signupBtn) {
 }
 
 if (loginBtn) {
-  loginBtn.addEventListener("click", async () => {
+  loginBtn.addEventListener("click", async (event) => {
+  event.preventDefault();
 
     const email = authEmail.value;
     const password = authPassword.value;
