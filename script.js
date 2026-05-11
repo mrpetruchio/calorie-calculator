@@ -374,10 +374,30 @@ const todayBtn = document.getElementById("todayBtn");
 const yesterdayBtn = document.getElementById("yesterdayBtn");
 const profileTarget = document.getElementById("profileTarget");
 
-function renderDiaryPage(date) {
-  if (!diaryList || !diaryTotal) return;
+const {
+  data: { user }
+} = await supabaseClient.auth.getUser();
 
-  const diary = getDiary(date);
+if (!user) {
+  diaryList.innerHTML = `
+    <div class="empty">
+      Сначала войдите в аккаунт
+    </div>
+  `;
+  return;
+}
+
+const { data: diary, error } = await supabaseClient
+  .from("diary_entries")
+  .select("*")
+  .eq("user_id", user.id)
+  .eq("entry_date", date)
+  .order("created_at", { ascending: false });
+
+if (error) {
+  console.error(error);
+  return;
+}
   const target = getProfileTargetCalories();
 
   const totals = diary.reduce(
