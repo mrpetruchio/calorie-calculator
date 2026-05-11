@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>NutriWorld</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<header class="hero">
+  <nav class="nav container">
+
+    <a href="index.html" class="logo">
+      <span class="logo-mark">NW</span>
+      NutriWorld
+    </a>
+
+    <div class="nav-actions">
+      <a href="index.html" class="nav-link active">Калькулятор</a>
+      <a href="foods.html" class="nav-link">Блюда</a>
+      <a href="diary.html" class="nav-link">Дневник</a>
+
+      <select id="languageSelect" class="language-select"></select>
+    </div>
+
+  </nav>
+
+  <div class="container hero-content">
+
+    <div class="badge">
+      Питание без границ
+    </div>
+
+    <h1>
+      NutriWorld
+    </h1>
+
+    <p>
+      Международный дневник питания и база мировой еды.
+    </p>
+
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="card">
+
+    <div class="section-title">
+      <h2>Ваш профиль</h2>
+
+      <p>
+        Заполните данные для расчёта нормы калорий.
+      </p>
+    </div>
+
+    <form id="calorieForm" class="form">
+
+      <label>
+        Пол
+        <select id="gender">
+          <option value="male">Мужчина</option>
+          <option value="female">Женщина</option>
+        </select>
+      </label>
+
+      <label>
+        Возраст
+        <input type="number" id="age"/>
+      </label>
+
+      <label>
+        Рост
+        <input type="number" id="height"/>
+      </label>
+
+      <label>
+        Вес
+        <input type="number" id="weight"/>
+      </label>
+
+      <label>
+        Активность
+        <select id="activity">
+          <option value="1.2">Минимальная</option>
+          <option value="1.375">Лёгкая</option>
+          <option value="1.55">Средняя</option>
+          <option value="1.725">Высокая</option>
+        </select>
+      </label>
+
+      <label>
+        Цель
+        <select id="goal">
+          <option value="lose">Похудение</option>
+          <option value="maintain">Поддержание</option>
+          <option value="gain">Набор массы</option>
+        </select>
+      </label>
+
+      <button type="submit">
+        Посчитать
+      </button>
+
+    </form>
+
+    <div id="result" class="result hidden"></div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 NutriWorld</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script src="translations.js"></script>
+<script src="foods.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

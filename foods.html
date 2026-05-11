@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>NutriWorld — Блюда</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<header class="hero small-hero">
+
+  <nav class="nav container">
+
+    <a href="index.html" class="logo">
+      <span class="logo-mark">NW</span>
+      NutriWorld
+    </a>
+
+    <div class="nav-actions">
+
+      <a href="index.html" class="nav-link">
+        Калькулятор
+      </a>
+
+      <a href="foods.html" class="nav-link active">
+        Блюда
+      </a>
+
+      <a href="diary.html" class="nav-link">
+        Дневник
+      </a>
+
+      <select id="languageSelect" class="language-select"></select>
+
+    </div>
+
+  </nav>
+
+  <div class="container hero-content">
+
+    <div class="badge">
+      Мировая база еды
+    </div>
+
+    <h1>
+      Найдите блюдо
+    </h1>
+
+    <p>
+      Добавляйте блюда в дневник питания.
+    </p>
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <section class="card">
+
+    <div class="section-title">
+      <h2>Поиск блюда</h2>
+    </div>
+
+    <div class="search-panel">
+
+      <input
+        id="foodSearchInput"
+        type="text"
+        placeholder="Введите блюдо..."
+      />
+
+      <select id="cuisineFilter">
+        <option value="all">Все кухни</option>
+      </select>
+
+    </div>
+
+    <div id="popularFoods" class="popular-foods"></div>
+
+    <div id="suggestions" class="suggestions hidden"></div>
+
+    <div id="selectedFood" class="selected-food hidden"></div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 NutriWorld</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script src="translations.js"></script>
+<script src="foods.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

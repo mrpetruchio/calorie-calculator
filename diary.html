@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>NutriWorld — Дневник</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<header class="hero small-hero">
+
+  <nav class="nav container">
+
+    <a href="index.html" class="logo">
+      <span class="logo-mark">NW</span>
+      NutriWorld
+    </a>
+
+    <div class="nav-actions">
+
+      <a href="index.html" class="nav-link">
+        Калькулятор
+      </a>
+
+      <a href="foods.html" class="nav-link">
+        Блюда
+      </a>
+
+      <a href="diary.html" class="nav-link active">
+        Дневник
+      </a>
+
+      <select id="languageSelect" class="language-select"></select>
+
+    </div>
+
+  </nav>
+
+  <div class="container hero-content">
+
+    <div class="badge">
+      Дневник питания
+    </div>
+
+    <h1>
+      История питания
+    </h1>
+
+    <p>
+      Смотрите, что вы ели сегодня и раньше.
+    </p>
+
+  </div>
+
+</header>
+
+<main class="container">
+
+  <section class="card">
+
+    <div class="section-title">
+      <h2>Выберите дату</h2>
+    </div>
+
+    <div class="date-row">
+
+      <input type="date" id="diaryDate" class="date-input"/>
+
+      <button id="todayBtn" class="small-button">
+        Сегодня
+      </button>
+
+      <button id="yesterdayBtn" class="small-button secondary-button">
+        Вчера
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="card">
+
+    <div id="profileTarget" class="profile-target"></div>
+
+    <div id="diaryTotal" class="diary-total"></div>
+
+  </section>
+
+  <section class="card">
+
+    <div id="diaryList" class="diary-list"></div>
+
+    <button id="clearDiaryBtn" class="danger-button">
+      Очистить дневник
+    </button>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 NutriWorld</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script src="translations.js"></script>
+<script src="foods.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
