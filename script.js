@@ -290,7 +290,7 @@ function selectFood(foodId) {
   `;
 }
 
-function addFoodToDiary() {
+async function addFoodToDiary() {
   if (!selectedFood) return;
 
   const grams = Number(document.getElementById("selectedGrams").value);
@@ -298,24 +298,42 @@ function addFoodToDiary() {
 
   if (!grams) return;
 
-  const today = getTodayDate();
-  const diary = getDiary(today);
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
 
-  diary.push({
-    id: Date.now(),
-    foodId: selectedFood.id,
-    name: selectedFood.name,
-    cuisine: selectedFood.cuisine,
-    icon: selectedFood.icon || "🍽️",
-    meal,
+  if (!user) {
+    alert("Сначала войдите в аккаунт");
+    location.href = "auth.html";
+    return;
+  }
+
+  const entry = {
+    user_id: user.id,
+    entry_date: getTodayDate(),
+
+    food_name: getLocalized(selectedFood.name),
+
+    meal_type: meal,
+
     grams,
+
     calories: Math.round((selectedFood.calories / 100) * grams),
     protein: Math.round((selectedFood.protein / 100) * grams),
     fat: Math.round((selectedFood.fat / 100) * grams),
     carbs: Math.round((selectedFood.carbs / 100) * grams)
-  });
+  };
 
-  saveDiary(today, diary);
+  const { error } = await supabaseClient
+    .from("diary_entries")
+    .insert([entry]);
+
+  if (error) {
+    console.error(error);
+    alert("Ошибка сохранения");
+    return;
+  }
+
   alert("Блюдо добавлено");
 }
 
@@ -374,38 +392,49 @@ const todayBtn = document.getElementById("todayBtn");
 const yesterdayBtn = document.getElementById("yesterdayBtn");
 const profileTarget = document.getElementById("profileTarget");
 
-const {
-  data: { user }
-} = await supabaseClient.auth.getUser();
+async function renderDiaryPage(date) {
+  if (!diaryList || !diaryTotal) return;
 
-if (!user) {
-  diaryList.innerHTML = `
-    <div class="empty">
-      Сначала войдите в аккаунт
-    </div>
-  `;
-  return;
-}
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
 
-const { data: diary, error } = await supabaseClient
-  .from("diary_entries")
-  .select("*")
-  .eq("user_id", user.id)
-  .eq("entry_date", date)
-  .order("created_at", { ascending: false });
+  if (!user) {
+    diaryList.innerHTML = `
+      <div class="empty">
+        Сначала войдите в аккаунт
+      </div>
+    `;
 
-if (error) {
-  console.error(error);
-  return;
-}
+    diaryTotal.innerHTML = "";
+    return;
+  }
+
+  const { data: diary, error } = await supabaseClient
+    .from("diary_entries")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("entry_date", date)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    diaryList.innerHTML = `
+      <div class="empty">
+        Ошибка загрузки дневника
+      </div>
+    `;
+    return;
+  }
+
   const target = getProfileTargetCalories();
 
   const totals = diary.reduce(
     (acc, item) => {
-      acc.calories += item.calories;
-      acc.protein += item.protein;
-      acc.fat += item.fat;
-      acc.carbs += item.carbs;
+      acc.calories += Number(item.calories) || 0;
+      acc.protein += Number(item.protein) || 0;
+      acc.fat += Number(item.fat) || 0;
+      acc.carbs += Number(item.carbs) || 0;
       return acc;
     },
     { calories: 0, protein: 0, fat: 0, carbs: 0 }
@@ -414,12 +443,17 @@ if (error) {
   if (profileTarget) {
     if (target) {
       const percent = Math.min(100, Math.round((totals.calories / target) * 100));
+
       profileTarget.innerHTML = `
         Цель: ${target} ккал · съедено: ${totals.calories} ккал · осталось: ${Math.max(0, target - totals.calories)} ккал
-        <div class="progress-wrap"><div class="progress-bar" style="width:${percent}%"></div></div>
+        <div class="progress-wrap">
+          <div class="progress-bar" style="width:${percent}%"></div>
+        </div>
       `;
     } else {
-      profileTarget.innerHTML = `Сначала сохраните профиль на странице калькулятора, чтобы видеть цель по калориям.`;
+      profileTarget.innerHTML = `
+        Сначала сохраните профиль на странице калькулятора, чтобы видеть цель по калориям.
+      `;
     }
   }
 
@@ -441,7 +475,7 @@ if (error) {
 
   diaryList.innerHTML = mealOrder
     .map((meal) => {
-      const items = diary.filter((item) => (item.meal || "snack") === meal);
+      const items = diary.filter((item) => (item.meal || item.meal_type || "snack") === meal);
 
       if (items.length === 0) return "";
 
@@ -454,8 +488,8 @@ if (error) {
               return `
                 <div class="diary-item">
                   <div>
-                    <strong>${item.icon || "🍽️"} ${getLocalized(item.name)}</strong>
-                    <span>${item.grams} г · ${getLocalized(item.cuisine)}</span>
+                    <strong>${item.food_name}</strong>
+                    <span>${item.grams} г</span>
                   </div>
 
                   <div>
@@ -463,7 +497,7 @@ if (error) {
                     <span>${item.protein}Б / ${item.fat}Ж / ${item.carbs}У</span>
                   </div>
 
-                  <button class="delete-entry" onclick="deleteDiaryEntry('${date}', ${item.id})">Удалить</button>
+                  <button class="delete-entry" onclick="deleteDiaryEntry('${date}', '${item.id}')">Удалить</button>
                 </div>
               `;
             })
@@ -474,9 +508,18 @@ if (error) {
     .join("");
 }
 
-function deleteDiaryEntry(date, entryId) {
-  const diary = getDiary(date).filter((item) => item.id !== entryId);
-  saveDiary(date, diary);
+async function deleteDiaryEntry(date, entryId) {
+  const { error } = await supabaseClient
+    .from("diary_entries")
+    .delete()
+    .eq("id", entryId);
+
+  if (error) {
+    console.error(error);
+    alert("Ошибка удаления");
+    return;
+  }
+
   renderDiaryPage(date);
 }
 
@@ -504,14 +547,30 @@ if (yesterdayBtn) {
 }
 
 if (clearDiaryBtn) {
-  clearDiaryBtn.addEventListener("click", () => {
+  clearDiaryBtn.addEventListener("click", async () => {
     const date = diaryDateInput.value;
-    localStorage.removeItem(getDiaryKey(date));
+
+    const {
+      data: { user }
+    } = await supabaseClient.auth.getUser();
+
+    if (!user) return;
+
+    const { error } = await supabaseClient
+      .from("diary_entries")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("entry_date", date);
+
+    if (error) {
+      console.error(error);
+      alert("Ошибка очистки дневника");
+      return;
+    }
+
     renderDiaryPage(date);
   });
 }
-
-/* START */
 
 initLanguageSelect();
 renderCuisineFilter();
@@ -526,6 +585,8 @@ const logoutBtn = document.getElementById("logoutBtn");
 const authStatus = document.getElementById("authStatus");
 
 async function checkUser() {
+  if (!authStatus || !logoutBtn) return;
+
   const {
     data: { user }
   } = await supabaseClient.auth.getUser();
@@ -607,3 +668,23 @@ if (logoutBtn) {
 }
 
 checkUser();
+
+async function updateAccountLink() {
+  const accountLink = document.getElementById("accountLink");
+
+  if (!accountLink) return;
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (user) {
+    accountLink.textContent = user.email;
+    accountLink.href = "auth.html";
+  } else {
+    accountLink.textContent = "Вход";
+    accountLink.href = "auth.html";
+  }
+}
+
+updateAccountLink();
