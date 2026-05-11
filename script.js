@@ -584,6 +584,7 @@ const signupBtn = document.getElementById("signupBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
 const authStatus = document.getElementById("authStatus");
+const privacyConsent = document.getElementById("privacyConsent");
 
 async function checkUser() {
   if (!authStatus || !logoutBtn) return;
@@ -606,6 +607,12 @@ async function checkUser() {
 if (signupBtn) {
   signupBtn.addEventListener("click", async (event) => {
   event.preventDefault();
+
+    if (privacyConsent && !privacyConsent.checked) {
+      authStatus.classList.remove("hidden");
+      authStatus.innerHTML = "Нужно согласиться с Политикой конфиденциальности.";
+      return;
+    }
 
     const email = authEmail.value;
     const password = authPassword.value;

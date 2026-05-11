@@ -602,3 +602,23 @@ button {
     grid-template-columns: auto 1fr;
   }
 }
+
+
+.checkbox-label {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.checkbox-label input {
+  width: auto;
+  margin-top: 4px;
+}
+
+.checkbox-label a {
+  color: #166534;
+  font-weight: 900;
+}

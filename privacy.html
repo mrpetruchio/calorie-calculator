@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>NutriWorld — Политика конфиденциальности</title>
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+
+<header class="hero small-hero">
+  <nav class="nav container">
+    <a href="index.html" class="logo">
+      <span class="logo-mark">NW</span>
+      NutriWorld
+    </a>
+
+    <div class="nav-actions">
+      <a href="index.html" class="nav-link">Калькулятор</a>
+      <a href="foods.html" class="nav-link">Блюда</a>
+      <a href="diary.html" class="nav-link">Дневник</a>
+      <a href="auth.html" id="accountLink" class="nav-link">Вход</a>
+
+      <select id="languageSelect" class="language-select"></select>
+    </div>
+  </nav>
+
+  <div class="container hero-content">
+    <div class="badge">Документы</div>
+    <h1>Политика конфиденциальности</h1>
+    <p>Этот документ описывает, какие данные NutriWorld собирает и как они используются.</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="card">
+    <div class="section-title">
+      <h2>1. Общие положения</h2>
+    </div>
+
+    <p>
+      NutriWorld — сервис для расчёта калорий, поиска блюд и ведения дневника питания.
+      Используя сайт, пользователь соглашается с условиями настоящей Политики конфиденциальности.
+    </p>
+
+    <p>
+      Настоящая Политика составлена для MVP-версии проекта и может быть обновлена при развитии сервиса.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>2. Какие данные мы собираем</h2>
+    </div>
+
+    <p>Сайт может обрабатывать следующие данные:</p>
+
+    <ul>
+      <li>имя пользователя;</li>
+      <li>email;</li>
+      <li>данные авторизации через Supabase;</li>
+      <li>записи дневника питания: блюда, граммы, калории, белки, жиры, углеводы, дата;</li>
+      <li>локальные настройки сайта: язык, цель калорий, профиль расчёта.</li>
+    </ul>
+
+    <p>
+      Сайт не запрашивает паспортные данные, адрес проживания, номер телефона, точную геолокацию
+      или медицинские диагнозы.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>3. Для чего используются данные</h2>
+    </div>
+
+    <p>Данные используются только для работы функций сайта:</p>
+
+    <ul>
+      <li>создание аккаунта;</li>
+      <li>вход пользователя;</li>
+      <li>сохранение дневника питания;</li>
+      <li>отображение истории питания;</li>
+      <li>расчёт дневной нормы калорий;</li>
+      <li>улучшение пользовательского опыта.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>4. Где хранятся данные</h2>
+    </div>
+
+    <p>
+      Авторизация и облачные данные хранятся в Supabase. Часть настроек может храниться локально
+      в браузере пользователя через localStorage.
+    </p>
+
+    <p>
+      Пароли пользователей не хранятся в коде сайта. Авторизация обрабатывается Supabase.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>5. Доступ к данным</h2>
+    </div>
+
+    <p>
+      Пользователь имеет доступ только к своим записям дневника. Для защиты данных используются
+      правила доступа Supabase RLS.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>6. Удаление данных</h2>
+    </div>
+
+    <p>
+      Пользователь может очищать записи дневника питания на сайте. В дальнейшем будет добавлена
+      функция полного удаления аккаунта и связанных данных.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>7. Ограничение ответственности</h2>
+    </div>
+
+    <p>
+      NutriWorld не является медицинским сервисом. Расчёты калорий и БЖУ носят справочный характер.
+      При медицинских ограничениях или заболеваниях необходимо консультироваться со специалистом.
+    </p>
+  </section>
+
+  <section class="card">
+    <div class="section-title">
+      <h2>8. Контакты</h2>
+    </div>
+
+    <p>
+      По вопросам обработки данных можно обращаться к владельцу проекта NutriWorld.
+    </p>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>© 2026 NutriWorld · <a href="privacy.html">Политика конфиденциальности</a></p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="supabase.js"></script>
+
+<script src="translations.js"></script>
+<script src="foods.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
