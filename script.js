@@ -496,3 +496,92 @@ if (clearDiaryBtn) {
 initLanguageSelect();
 renderCuisineFilter();
 renderPopularFoods();
+const authEmail = document.getElementById("authEmail");
+const authPassword = document.getElementById("authPassword");
+
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+
+const authStatus = document.getElementById("authStatus");
+
+async function checkUser() {
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+  if (user) {
+    authStatus.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
+
+    authStatus.innerHTML = `
+      <strong>Вы вошли:</strong><br>
+      ${user.email}
+    `;
+  }
+}
+
+if (signupBtn) {
+  signupBtn.addEventListener("click", async () => {
+
+    const email = authEmail.value;
+    const password = authPassword.value;
+
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password
+    });
+
+    authStatus.classList.remove("hidden");
+
+    if (error) {
+      authStatus.innerHTML = error.message;
+      return;
+    }
+
+    authStatus.innerHTML = `
+      Регистрация успешна.<br>
+      Проверьте email.
+    `;
+  });
+}
+
+if (loginBtn) {
+  loginBtn.addEventListener("click", async () => {
+
+    const email = authEmail.value;
+    const password = authPassword.value;
+
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    authStatus.classList.remove("hidden");
+
+    if (error) {
+      authStatus.innerHTML = error.message;
+      return;
+    }
+
+    authStatus.innerHTML = `
+      Вход выполнен.
+    `;
+
+    logoutBtn.classList.remove("hidden");
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+
+    await supabaseClient.auth.signOut();
+
+    authStatus.innerHTML = `
+      Вы вышли из аккаунта.
+    `;
+  });
+}
+
+checkUser();
